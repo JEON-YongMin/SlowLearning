@@ -1,0 +1,114 @@
+# 프로덕션 환경 설정 (Elastic Beanstalk)
+spring:
+  # 프로덕션 데이터베이스 설정 (MySQL)
+  datasource:
+    url: ${RDS_JDBC_URL}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      leak-detection-threshold: 60000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: Kakao
+            scope:
+              - profile_nickname
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  sql:
+    init:
+      continue-on-error: true
+
+# 카카오페이 설정
+kakaopay:
+  cid: ${KAKAOPAY_CID}
+  secretKey: ${KAKAOPAY_SECRET_KEY}
+  api-url: ${KAKAOPAY_API_URL}
+  redirect-url:
+    success: "${SERVER_BASE_URL}/payment/success"
+    fail: "${SERVER_BASE_URL}/payment/fail"
+    cancel: "${SERVER_BASE_URL}/payment/cancel"
+
+# JWT 설정
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 1800000         # 30분
+  refresh-expiration: 604800000 # 7일
+
+# AWS S3 설정
+aws:
+  access-key: ${AWS_ACCESS_KEY_ID}
+  secret-key: ${AWS_SECRET_ACCESS_KEY}
+  region: ${AWS_REGION}
+  bucket: ${AWS_S3_BUCKET_NAME}
+
+# 서버 설정
+server:
+  port: ${SERVER_PORT:5000}
+  base-url: ${SERVER_BASE_URL}
+  forward-headers-strategy: NATIVE
+
+# 프론트엔드 리다이렉트 URL
+frontend:
+  redirect-url: ${FRONTEND_REDIRECT_URL}
+
+# Swagger 설정
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
+# Health 체크
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+# 로깅 설정
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springdoc: DEBUG
+    greensnail_backend: DEBUG
