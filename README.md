@@ -109,49 +109,6 @@
 
 ---
 
-## 실행 방법
-
-> 실행 환경과 설정 파일은 로컬 개발 환경에 맞게 수정해야 합니다.
-
-### 1. Repository clone
-
-```bash
-git clone https://github.com/JEON-YongMin/SlowLearning.git
-cd SlowLearning/BackEnd
-```
-
-### 2. DB 설정
-
-`src/main/resources` 경로의 설정 파일에서 로컬 DB 정보를 설정합니다.
-
-예시:
-
-```yaml
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/slowlearning
-    username: your_username
-    password: your_password
-```
-
-민감한 정보가 포함된 설정 파일은 GitHub에 업로드하지 않고 로컬에서만 관리합니다.
-
-### 3. 프로젝트 실행
-
-Mac / Linux:
-
-```bash
-./gradlew bootRun
-```
-
-Windows:
-
-```bash
-gradlew.bat bootRun
-```
-
----
-
 ## 프로젝트를 통해 배운 점
 
 - 기능별 데이터 흐름을 고려한 엔티티 설계의 중요성
